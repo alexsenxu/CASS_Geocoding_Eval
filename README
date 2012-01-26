@@ -1,0 +1,85 @@
+This is a project for developing a geocoded addresses, for the purpose of evaluating new geocoders. The CASS stage 1 test set is used (from USPS, CASS is a test set for evaluating address normalization software, however, it doesn't offer lat/lon). 150,000 address are included.
+
+Author: Sen Xu
+Website: senxu.net
+
+Motivation:
+Currently there are no geocoding evaluation test set out there. 
+
+
+There are a selection of web geocoding services:
+
+current web geocoding service provide APIs for geocoding (yahoo, bing, google, mapquest are major players). some examples calls are listed as below:
+
+*Yahoo 
+
+REST call: http://where.yahooapis.com/geocode?q=320+vairo+Blvd,+Apt+C,+State+College,+PA+16803
+Response:
+<ResultSet version="1.0">
+ <Error>0</Error>
+ <ErrorMessage>No error</ErrorMessage>
+ <Locale>us_US</Locale>
+ <Quality>87</Quality>
+ <Found>1</Found>
+ <Result>
+  <quality>87</quality>
+  <latitude>40.810964</latitude>
+  <longitude>-77.888236</longitude>
+  <offsetlat>40.810864</offsetlat>
+  <offsetlon>-77.888137</offsetlon>
+  <radius>500</radius>
+  <name/>
+  <line1>320 Vairo Blvd, Apt C</line1>
+  <line2>State College, PA  16803-2826</line2>
+  <line3/>
+  <line4>United States</line4>
+  <house>320</house>
+  <street>Vairo Blvd</street>
+  <xstreet/>
+  <unittype>Apt</unittype>
+  <unit>C</unit>
+  <postal>16803-2826</postal>
+  <neighborhood/>
+  <city>State College</city>
+  <county>Centre County</county>
+  <state>Pennsylvania</state>
+  <country>United States</country>
+  <countrycode>US</countrycode>
+  <statecode>PA</statecode>
+  <countycode/>
+  <uzip>16803</uzip>
+  <hash>97E22C2D6AF571BC</hash>
+  <woeid>12764455</woeid>
+  <woetype>11</woetype>
+ </Result>
+</ResultSet>
+
+*Google 
+
+REST call: http://maps.googleapis.com/maps/api/geocode/xml?sensor=true&address=1600+Amphitheatre+Parkway,+Mountain+View,+CA
+
+*Bing 
+
+REST call: http://dev.virtualearth.net/REST/v1/Locations/US/WA/98052/Redmond/1%20Microsoft%20Way?o=xml&key=BingMapsKey
+
+replace the BingMapsKey with your own key, generated here: go to: https://www.bingmapsportal.com/, go to my account -> Create or view keys, fill in the form and get the key. it should look something like this: ArHg1cMweFLBZD6p0TMspBnCfW7kG2_PdNd4xaE6CxgZbbqNFPj9OCglIpTLSpeL
+
+Response:
+
+*Mapquest 
+
+REST call: http://where.yahooapis.com/geocode?q=320+vairo+Blvd,+Apt+C,+State+College,+PA+16803
+
+Response:
+
+Note that the response not only include lat/lon, but also "formatted address", "precision", and most geocoding service has a daily call cap. As of Jan 25h, 2012, the daily cap for the above mentioned geocoding services are listed in the following table: 
+
+geocoding web service	geocoding call daily cap	require key
+google	2,500	optional
+yahoo	50,000	optional
+bing	30,000	yes
+mapquest	5,000	yes 
+
+In essense, it will take google, bing and mapquest a long time to finish geocoding the 150,000 address from CASS (60 days for google, 30 days for mapquest) from one IP address. Yahoo and Bing are more flexible and more generous on API usage.
+
+there are also some geocoding service provided by academic institution, such as the one from USC: https://webgis.usc.edu/Services/Geocode/WebService/GeocoderWebService.aspx 
