@@ -1,0 +1,126 @@
+/*Override default YDN site styles for docbook guides*/
+.ydn-content-bg { background:none; }
+div#ydn-header-univ-wrp { background:url("http://l.yimg.com/kj/ydn/common/img/ydn-bg-grad-0F6acPx1J2OGK14kV-6atQ-.png") repeat-x scroll 0 -702px #E8EDF0; }
+div#bd { border:none;padding:0;overflow:visible; }
+ul.ydn-breadcrumb { background-color:#e9edf0; }
+div#ydnRack{ margin-top:0; }
+
+/* Add some space above h2 titles */
+h2.title { margin-top: 1em; }
+
+/* change the color of the links to help make them pop a little more */
+#doc4 #bd #yui-main .yui-b a { color: #0088ee; }
+
+/* docbook generates span with italic class */
+#doc4 #bd #yui-main .yui-b span.italic { font-style: italic; }
+
+/* docbook generates span with command class */
+#doc4 #bd #yui-main .yui-b span.command { font-family: monospace; }
+
+/* saner spacing for Ps in LIs */
+#doc4 #bd #yui-main .yui-b .chunky-list li { margin-bottom: 1.25em; }
+#doc4 #bd #yui-main .yui-b .chunky-list li p { margin-bottom: 0.6em; padding-bottom: 0; }
+#doc4 #bd #yui-main .yui-b .chunky-list li p.last { margin-bottom: 0; }
+
+/* give the tables a little breathing room at the bottom */
+#doc4 #bd #yui-main .yui-b .informaltable { margin-bottom: 0.75em; }
+
+/* define basic style for modules with backgrounds that fade from the top to the bottom */
+.fadeBox { background: url('http://l.yimg.com/a/i/ydn/right-col-box-bg.gif') repeat-x; border: 1px solid #d9d9d9; margin: 1em 0; width: 23em; text-align: left; }
+.fadeBox p.title { color: #89b31f; font-family: Arial,sans-serif; font-size: 108%; font-weight: bold; text-transform: uppercase; margin: 0.4em; margin-top: 0.6em; padding: 0; }
+.fadeBox .bd { margin: 0.6em; }
+
+/* styles for the search module */
+#ydn-search-module-inputs  input { width: 15em; margin-right: 0.5em; padding: 0.1em; }
+#ydn-search-module-results { margin-top: 0.3em; margin-bottom: 0.3em; font-size: 92%; }
+#ydn-search-module-results ul { margin-left: 1.5em; }
+#ydn-search-module-results ul li { list-style-type: disc; }
+
+/* syntax highlighter clipping line numbers, fix it */
+.codeHolder .dp-highlighter ol { margin-left: 4em; }
+
+/* style a computeroutput chunk of text */
+pre.computeroutput { color: #000000; background: #cccccc; border: 1px solid #000000; padding: 1em; margin-bottom: 1em; overflow: auto; _width: 44em; line-height: 1.2; }
+
+/* Add padding in toc box */
+div#toc {
+  padding: 10px;
+}
+
+/* turn off borders in toc entries */
+div#toc table tr {
+  border-style: none;
+}
+
+/* Provide highlighting of selected items in the TOC: */
+div#toc .expanded { 
+  font-weight: bold;
+}
+
+/* TABLE OF CONTENTS title */
+.recentBlog {
+  color: #89B31F;
+  font-family: Arial;
+  font-size: 108%;
+  font-weight: bold;
+}
+
+/* book title on index.html */
+#bd div.book div.titlepage h1.title {
+  color: #0165a0;
+  font-size: 245%;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+div.section div.titlepage h5 {
+  margin-top: 1em;
+  margin-bottom: 0.7em;
+  font-weight: bold;
+}
+
+
+div.glossary dl dt {
+  font-weight: bold;
+}
+
+dl {
+  margin-left:20px;
+}
+dd {
+  margin-left:20px;
+}
+
+div#navheader {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-style: normal;
+  font-size: 92%;
+  color: #888888;
+}
+
+div#navlinkprevious {
+  display: inline;
+}
+
+div#navlinknext {
+  display: inline;
+}
+
+table#navtable {
+  border: 0pt none;
+}
+
+table#navtable tr,td {
+  border: 0pt none;
+}
+
+
+#doc4 #bd .informaltable table td { padding: 0.2em 0.4em; }
+
+
