@@ -30,14 +30,14 @@ public class CASS2GeocoderYahoo {
         // TODO code application logic here
         Address ad=new Address();
         try {
-            File input=new File("NATLSTG1_withkey_yahoo.txt");
+            File input=new File("NATLSTG1_withkey_yahoo_from100001.txt");
             if (!input.exists()) {
                 System.out.println("no input");
                 System.exit(-1);
             }
             BufferedReader br=new BufferedReader(new FileReader(input));
             
-            File output=new File("NATLSTG1_withkey_yahooGeocoded.txt");
+            File output=new File("NATLSTG1_withkey_yahooGeocoded_from100001.txt");
             if (!input.exists()) output.createNewFile();
             BufferedWriter bw=new BufferedWriter(new FileWriter(output,true));
             String line;
@@ -46,7 +46,16 @@ public class CASS2GeocoderYahoo {
                 String correctAddress = line.split("\\t")[1].split("\\|")[1];
                 //System.out.println(correctAddress);
                 ad.setFullAddress(correctAddress);
-                String latlonstr=ad.getLatLonFromYahoo().toStringwithPrec();
+                LatLon latlon=ad.getLatLonFromYahoo();
+                int counter=0;
+                while (((latlon.getLat()-0.0))<0.0000001&&(counter<10)){
+                    Thread.sleep(5000);//if the response from yahoo is invalid, wait 5 seconds then retry
+                    System.out.println("No response for this address(wait 5 sec then retry):"+key+"\t"+correctAddress);
+                    if (counter==5) System.out.println(YahooGeocoder.YahooURLContructor(correctAddress));//if there are 5 no responses, emit the URL for manual examination
+                    latlon=ad.getLatLonFromYahoo();
+                    counter++;//if no response, try 10 time, then move on
+                }
+                String latlonstr=latlon.toStringwithPrec();
                 bw.append(key+"\t"+correctAddress+"|"+latlonstr);
                 System.out.println(key+"\t"+correctAddress+"|"+latlonstr);
                 bw.newLine();

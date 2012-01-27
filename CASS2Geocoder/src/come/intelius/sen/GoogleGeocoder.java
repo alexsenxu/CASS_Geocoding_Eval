@@ -45,7 +45,7 @@ public class GoogleGeocoder {
         String s=fulladdress.replaceAll("\\s", "+");
         URL url=null;
         try {
-            url = new URL("http://maps.googleapis.com/maps/api/geocode/xml?sensor=true&address="+s);
+            url = new URL("http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address="+s);
         } catch (MalformedURLException ex) {
             return null;
         }
@@ -61,6 +61,9 @@ public class GoogleGeocoder {
         try {
             //System.out.println("start fetching result from:" + yahoourl.toString());
             db = dbf.newDocumentBuilder();
+//set proxi
+//            System.setProperty("http.proxyHost", "118.97.117.138");
+//            System.setProperty("http.proxyPort", "8080");
             Document doc = db.parse(googleurl.openStream());
             
             Element rootEle = doc.getDocumentElement();

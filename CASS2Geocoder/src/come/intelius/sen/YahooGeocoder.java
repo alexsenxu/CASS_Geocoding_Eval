@@ -78,8 +78,8 @@ public class YahooGeocoder {
         }catch (SAXException ex) {
             Logger.getLogger(YahooGeocoder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            System.out.println("reached daily limit for yahoo crawling, now will wait for 12 hours before continue");
-            Thread.sleep(43200);
+            //System.out.println("reached daily limit for yahoo crawling, now will wait for 12 hours before continue");
+            //Thread.sleep(43200);
             Logger.getLogger(YahooGeocoder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(YahooGeocoder.class.getName()).log(Level.SEVERE, null, ex);
