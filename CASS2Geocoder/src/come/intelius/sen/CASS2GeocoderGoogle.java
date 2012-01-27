@@ -43,7 +43,7 @@ public class CASS2GeocoderGoogle {
             BufferedWriter bw=new BufferedWriter(new FileWriter(output,true));
             String line;
             int consecutiveFail=0;
-            int proxyid=0;
+            int proxyid=1;
             
             ArrayList<String> proxies=Proxy.getProxyList();
             int proxytotal=proxies.size();
