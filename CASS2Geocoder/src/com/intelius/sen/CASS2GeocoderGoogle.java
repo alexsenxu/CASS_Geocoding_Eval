@@ -31,6 +31,7 @@ public class CASS2GeocoderGoogle {
      * @param args the command line arguments
      */
     private static double commTimeThreshold=5000.00;//maximum allow 5 secs communication for proxies
+    private static boolean proxyOn=true;//switch for using proxy or not
     
     public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
@@ -48,25 +49,25 @@ public class CASS2GeocoderGoogle {
             BufferedWriter bw=new BufferedWriter(new FileWriter(output,true));
             String line;
             int consecutiveFail=0;
-            int proxyid=0;
+            int proxyid=1;
             
             ArrayList<String> proxies=Proxy.getProxyList();
             int proxytotal=proxies.size();
-            
-            while (TestProxy(proxies.get(proxyid).split("\\t")[0], proxies.get(proxyid).split("\\t")[1])>2000.0){
-                //when proxy response > 2 seconds
+            if (proxyOn){
+                while (TestProxy(proxies.get(proxyid).split("\\t")[0], proxies.get(proxyid).split("\\t")[1])>2000.0){
+                    //when proxy response > 2 seconds
+                    proxyid++;
+                }
+
+                System.setProperty("http.proxyHost", proxies.get(proxyid).split("\\t")[0]);
+                System.setProperty("http.proxyPort", proxies.get(proxyid).split("\\t")[1]);
+                System.out.println("==========setting new proxy============");
+                System.out.println("==========proxy ID: "+proxyid+" ============");
+                System.out.println("==========proxy IP: "+proxies.get(proxyid).split("\\t")[0]+" ============");
+                System.out.println("==========proxy Port: "+proxies.get(proxyid).split("\\t")[1]+" ============");
+
                 proxyid++;
             }
-            
-            System.setProperty("http.proxyHost", proxies.get(proxyid).split("\\t")[0]);
-            System.setProperty("http.proxyPort", proxies.get(proxyid).split("\\t")[1]);
-            System.out.println("==========setting new proxy============");
-            System.out.println("==========proxy ID: "+proxyid+" ============");
-            System.out.println("==========proxy IP: "+proxies.get(proxyid).split("\\t")[0]+" ============");
-            System.out.println("==========proxy Port: "+proxies.get(proxyid).split("\\t")[1]+" ============");
-            
-            proxyid++;
-            
             while ((line=br.readLine())!=null){
                 String key = line.split("\\t")[0]; 
                 String correctAddress = line.split("\\t")[1].split("\\|")[1];
@@ -89,7 +90,7 @@ public class CASS2GeocoderGoogle {
 
                 }
                 
-                if (((latlon.getLat()-0.0))<0.0000001) {
+                if (((latlon.getLat()-0.0))<0.0000001&&proxyOn) {
                         if (consecutiveFail>3){//if there are consecutive fail of API calls for 5 times, change proxy
                             if (proxyid>=proxytotal) {
                                 System.out.println("All proxy have been used, wait for 24 hours then start from this first proxy");
