@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +30,8 @@ public class CASS2GeocoderGoogle {
     /**
      * @param args the command line arguments
      */
+    private static double commTimeThreshold=5000.00;//maximum allow 5 secs communication for proxies
+    
     public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
         Address ad=new Address();
@@ -43,10 +48,15 @@ public class CASS2GeocoderGoogle {
             BufferedWriter bw=new BufferedWriter(new FileWriter(output,true));
             String line;
             int consecutiveFail=0;
-            int proxyid=9;
+            int proxyid=0;
             
             ArrayList<String> proxies=Proxy.getProxyList();
             int proxytotal=proxies.size();
+            
+            while (TestProxy(proxies.get(proxyid).split("\\t")[0], proxies.get(proxyid).split("\\t")[1])>2000.0){
+                //when proxy response > 2 seconds
+                proxyid++;
+            }
             
             System.setProperty("http.proxyHost", proxies.get(proxyid).split("\\t")[0]);
             System.setProperty("http.proxyPort", proxies.get(proxyid).split("\\t")[1]);
@@ -54,6 +64,7 @@ public class CASS2GeocoderGoogle {
             System.out.println("==========proxy ID: "+proxyid+" ============");
             System.out.println("==========proxy IP: "+proxies.get(proxyid).split("\\t")[0]+" ============");
             System.out.println("==========proxy Port: "+proxies.get(proxyid).split("\\t")[1]+" ============");
+            
             proxyid++;
             
             while ((line=br.readLine())!=null){
@@ -69,9 +80,9 @@ public class CASS2GeocoderGoogle {
                 
                 LatLon latlon=ad.getLatLonFromGoogle();
                 int counter=0;
-                while (((latlon.getLat()-0.0))<0.0000001&&(counter<10)){
-                    Thread.sleep(10000);//if the response from google is invalid, wait 5 seconds then retry
-                    System.out.println("No response for this address(wait 5 sec then retry):"+key+"\t"+correctAddress);
+                while (((latlon.getLat()-0.0))<0.0000001&&(counter<5)){
+                    Thread.sleep(10000);//if the response from google is invalid, wait 10 seconds then retry
+                    System.out.println("No response for this address(wait 10 sec then retry):"+key+"\t"+correctAddress);
                     if (counter==2) System.out.println(GoogleGeocoder.GoogleURLContructor(correctAddress));//if there are 5 no responses, emit the URL for manual examination
                     latlon=ad.getLatLonFromGoogle();
                     counter++;//if no response, try 10 time, then move on
@@ -79,7 +90,7 @@ public class CASS2GeocoderGoogle {
                 }
                 
                 if (((latlon.getLat()-0.0))<0.0000001) {
-                        if (consecutiveFail>5){//if there are consecutive fail of API calls for 5 times, change proxy
+                        if (consecutiveFail>3){//if there are consecutive fail of API calls for 5 times, change proxy
                             if (proxyid>=proxytotal) {
                                 System.out.println("All proxy have been used, wait for 24 hours then start from this first proxy");
                                 Thread.sleep(86400);
@@ -113,5 +124,39 @@ public class CASS2GeocoderGoogle {
             Logger.getLogger(CASS2GeocoderGoogle.class.getName()).log(Level.SEVERE, null, ex);
         }
         //System.out.println(ad.getLatLonFromYahoo().toString());
+    }
+
+    private static long TestProxy(String proxy, String port) {
+        {
+            BufferedReader br = null;
+            try {
+                URL testurl=new URL("http://www.google.com");
+                System.setProperty("http.proxyHost", proxy);
+                System.setProperty("http.proxyPort", port);
+                System.out.println("==========proxy IP: "+proxy);
+                System.out.println("==========proxy port: "+port);
+                br = new BufferedReader(new InputStreamReader(testurl.openStream()));
+                long start = System.currentTimeMillis();
+                System.out.println("start communicating with:"+testurl.toString());
+                while ((br.readLine())!=null){}
+                long elapseT = System.currentTimeMillis()-start;
+
+                System.out.println("==========proxy response time in millisec: "+elapseT);
+                br.close();
+                return elapseT;
+                
+                
+            } catch (IOException ex) {
+                Logger.getLogger(CASS2GeocoderGoogle.class.getName()).log(Level.SEVERE, null, ex);
+                
+                return (long) 2001.0;
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(CASS2GeocoderGoogle.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }

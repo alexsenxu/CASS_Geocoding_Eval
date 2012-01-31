@@ -29,6 +29,7 @@ public class Proxy {
             while ((line=br.readLine())!=null){
                 proxies.add(line);
             }
+            br.close();
             return proxies;
         } catch (IOException ex) {
             Logger.getLogger(Proxy.class.getName()).log(Level.SEVERE, null, ex);
@@ -36,6 +37,23 @@ public class Proxy {
         }
         
     }
+    
+    public static ArrayList<String> getProxyListFromFile(File f){
+        ArrayList<String> proxies=new ArrayList<String>();
+        try {
+            BufferedReader br=new BufferedReader(new FileReader(f));
+            String line;
+            while ((line=br.readLine())!=null){
+                proxies.add(line);
+            }
+            br.close();
+            return proxies;
+        } catch (IOException ex) {
+            Logger.getLogger(Proxy.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
     
     public static void main(String[] args){
         String ip;
@@ -48,7 +66,7 @@ public class Proxy {
  
             
         }
-        System.out.println(ps.size());
+        System.out.println("size:"+ps.size());
     }
     
 }

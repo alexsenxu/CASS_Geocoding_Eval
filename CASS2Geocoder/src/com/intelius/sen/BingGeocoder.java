@@ -25,7 +25,7 @@ public class BingGeocoder {
     
     
     public static void main(String[] args) throws InterruptedException{
-        String fulladdress="9 BROADWAY PMB 66349, SOMERVILLE MA 02145";
+        String fulladdress="35 EDGEWATOR DR # 101, CORAL GABLES FL 33133";
         URL bingurl=BingURLContructor(fulladdress);
         //System.out.println(bingurl);
         LatLon latlon=ParseLatLonFromGeocoder(bingurl);
@@ -45,7 +45,7 @@ public class BingGeocoder {
         String constructed="";
         String[] sp=fulladdress.split(", ");
         String s=fulladdress.split(", ")[sp.length-1];//first, get the last part of address: "State College PA 16803"
-        String[] citystatezip=s.split("\\s");
+        String[] citystatezip=s.split("\\s");//split by space, into [state] [college] [pa] [16803]
         String last=citystatezip[citystatezip.length-1];//last: 16803
         if (last.length()==2)//sometimes last is not zip, it's the state
         {
@@ -55,16 +55,22 @@ public class BingGeocoder {
             }
             constructed=constructed.concat("/");//constructed after this step: PA/16803/State College/
         }else{//when there is zipcode
-            constructed=citystatezip[citystatezip.length-2]+"/";//PA/
-            constructed=constructed+last+"/"+citystatezip[0];//PA/16803/State
-            for (int i=1; i<citystatezip.length-2;i++){
-                constructed=constructed+"%20"+citystatezip[i];
+            if (citystatezip.length>1){//when there is more than two words
+                constructed=citystatezip[citystatezip.length-2]+"/";//PA/
+                constructed=constructed+last+"/"+citystatezip[0];//PA/16803/State
+                for (int i=1; i<citystatezip.length-2;i++){
+                    constructed=constructed+"%20"+citystatezip[i];
+                }
+            }else{//when there is no more than two words, cases like "4101 E TULSA ST, 85236" , the citystatezip is only "85236"
+                constructed=constructed+ citystatezip[0];
             }
+            
         }
         constructed=constructed+"/";
         
         constructed=constructed+fulladdress.split(", ")[0].replaceAll("\\s", "%20");//second, get the second part of address: "320 Varo Blvd Apt C"
-        
+        constructed=constructed.replaceAll("#", "");
+        constructed=constructed.replaceAll("  ", " ");
         //System.out.println(constructed);
         
 
